@@ -5,6 +5,9 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Well(models.Model):
+    """
+    Модель Курса
+    """
     title = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     preview = models.ImageField(upload_to='preview/', verbose_name='Изображение', **NULLABLE)
@@ -20,6 +23,9 @@ class Well(models.Model):
 
 
 class Lesson(models.Model):
+    """
+    Модель Урока
+    """
     title = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     preview = models.ImageField(upload_to='preview/', verbose_name='Изображение', **NULLABLE)
