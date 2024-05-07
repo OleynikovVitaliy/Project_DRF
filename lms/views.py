@@ -18,7 +18,7 @@ class WellViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes = (~IsModerator,)
-        elif self.action in ['update', 'retrieve']:
+        elif self.action in ['update', 'retrieve', 'partial_update']:
             self.permission_classes = (IsModerator | IsOwner, )
         elif self.action == 'destroy':
             self.permission_classes = (~IsModerator | IsOwner, )
