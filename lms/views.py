@@ -77,13 +77,13 @@ class SubscriptionAPIView(APIView):
         user = self.request.user
         well_id = self.request.data.get("well")
         well = get_object_or_404(Well, pk=well_id)
-        subs_item = Subscription.objects.all().filter(user=user).filter(course=well).first()
+        subs_item = Subscription.objects.all().filter(user=user).filter(well=well).first()
 
         if subs_item:
             subs_item.delete()
             message = 'Подписка удалена'
         else:
-            new_sub = Subscription.objects.create(user=user, course=well)
+            new_sub = Subscription.objects.create(user=user, well=well)
             message = 'Подписка добавлена'
 
         return Response({"message": message})

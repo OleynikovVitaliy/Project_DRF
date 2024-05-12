@@ -25,13 +25,10 @@ class WellSerializers(serializers.ModelSerializer):
     """Сериализатор для модели курса """
     lesson_list = LessonSerializers(source='lesson_set', many=True, read_only=True)
     num_lessons = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Well
-        fields = '__all__'
-        validators = [VideoLinkValidator(field='video_link')]
+    subscription = serializers.SerializerMethodField()
 
     def get_num_lessons(self, well):
+        """ счетчик просмотров """
         return Lesson.objects.filter(well=well).count()
 
     def create(self, validated_data):
@@ -42,8 +39,19 @@ class WellSerializers(serializers.ModelSerializer):
         course.save()
         return course
 
+    def get_subscription(self, instance):
+        """ Вывод подписки в курсе """
+        user = self.request.user
+        return Subscription.objects.all().filter(user=user).filter(well=instance).exists()
+
+    class Meta:
+        model = Well
+        fields = '__all__'
+        validators = [VideoLinkValidator(field='video_link')]
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
+    """ Сериализатор для модели подписка """
     user = UserSerializer(read_only=True)
     course = WellSerializers(read_only=True)
 
