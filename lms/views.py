@@ -1,10 +1,14 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from lms.models import Well, Lesson
-from lms.serializers import WellSerializers, LessonSerializers
+from lms.models import Well, Lesson, Subscription
+from lms.paginators import MyPagination
+from lms.serializers import WellSerializers, LessonSerializers, SubscriptionSerializer
 from users.permissions import IsModerator, IsOwner
 
 
@@ -14,6 +18,7 @@ class WellViewSet(viewsets.ModelViewSet):
     queryset = Well.objects.all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
+    pagination_class = MyPagination
 
     def get_permissions(self):
         if self.action == 'create':
@@ -42,6 +47,7 @@ class LessonListAPIView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
+    pagination_class = MyPagination
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
@@ -62,3 +68,22 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
     """ удаление урока """
     queryset = Lesson.objects.all()
     permission_classes = (IsAuthenticated, IsOwner | ~IsModerator)
+
+
+class SubscriptionAPIView(APIView):
+    serializer_class = SubscriptionSerializer
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        well_id = self.request.data.get("well")
+        well = get_object_or_404(Well, pk=well_id)
+        subs_item = Subscription.objects.all().filter(user=user).filter(course=well).first()
+
+        if subs_item:
+            subs_item.delete()
+            message = 'Подписка удалена'
+        else:
+            new_sub = Subscription.objects.create(user=user, course=well)
+            message = 'Подписка добавлена'
+
+        return Response({"message": message})
