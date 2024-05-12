@@ -17,6 +17,7 @@ class LessonTestCase(APITestCase):
                                             video_link='youtube.com/skipro')
 
     def test_lesson_create(self):
+        """Тестирование создания уроков"""
         url = reverse('lms:lesson_create')
         data = {
             'title': 'test',
@@ -28,6 +29,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.all().count(), 2)
 
     def test_lesson_update(self):
+        """Тестирование обновления уроков"""
         url = reverse('lms:lesson_update', args=(self.lesson.pk,))
         data = {
             'title': 'test',
@@ -39,12 +41,14 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data.get("title"), 'test')
 
     def test_lesson_delete(self):
+        """Тестирование удаления уроков"""
         url = reverse('lms:lesson_delete', args=(self.lesson.pk,))
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.all().count(), 0)
 
     def test_lesson_list(self):
+        """Тестирование вывода списка уроков"""
         url = reverse('lms:lesson_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -52,6 +56,7 @@ class LessonTestCase(APITestCase):
 
 
 class SubscriptionTestCase(APITestCase):
+    """Тестирование управления подписками"""
 
     def setUp(self):
         self.user = User.objects.create(email="admin@admin.ru")
@@ -61,12 +66,14 @@ class SubscriptionTestCase(APITestCase):
         self.data = {"user": self.user.pk, "well": self.well.pk}
 
     def test_subscribe(self):
+        """ Добавление подписки"""
         url = reverse('lms:subscribe', args=(self.well.pk,))
         response = self.client.post(url, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'message': 'Подписка добавлена'})
 
     def test_unsubscribe(self):
+        """ Удаление подписки"""
         url = reverse('lms:subscribe', args=(self.well.pk,))
         Subscription.objects.create(well=self.well, user=self.user)
         response = self.client.post(url, self.data)
