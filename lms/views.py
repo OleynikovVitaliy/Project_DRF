@@ -61,13 +61,13 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     """ изменение урока """
     serializer_class = LessonSerializers
     queryset = Lesson.objects.all()
-    permission_classes = (IsAuthenticated, IsModerator | IsOwner)
+#    permission_classes = (IsAuthenticated, IsModerator | IsOwner)
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     """ удаление урока """
     queryset = Lesson.objects.all()
-    permission_classes = (IsAuthenticated, IsOwner | ~IsModerator)
+#   permission_classes = (IsAuthenticated, IsOwner | ~IsModerator)
 
 
 class SubscriptionAPIView(APIView):

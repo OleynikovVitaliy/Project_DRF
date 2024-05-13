@@ -42,7 +42,7 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_delete(self):
         """Тестирование удаления уроков"""
-        url = reverse('lms:lesson_delete', args=(self.lesson.pk,))
+        url = reverse('lms:lesson_delete', kwargs={'pk': self.lesson.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.all().count(), 0)
