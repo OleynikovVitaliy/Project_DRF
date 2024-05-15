@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
-    """ Сериализатор для модели платеж """
+    """ Сериализатор для модели платежа """
     class Meta:
         model = Payments
         fields = '__all__'
