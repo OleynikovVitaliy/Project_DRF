@@ -61,19 +61,21 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     """ изменение урока """
     serializer_class = LessonSerializers
     queryset = Lesson.objects.all()
-#    permission_classes = (IsAuthenticated, IsModerator | IsOwner)
+    permission_classes = (IsAuthenticated, IsModerator | IsOwner)
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     """ удаление урока """
     queryset = Lesson.objects.all()
-#   permission_classes = (IsAuthenticated, IsOwner | ~IsModerator)
+    permission_classes = (IsAuthenticated, IsOwner | ~IsModerator)
 
 
 class SubscriptionAPIView(APIView):
+    """Логика подписки на курс """
     serializer_class = SubscriptionSerializer
 
     def post(self, *args, **kwargs):
+        """ Активация или деактивация подписки """
         user = self.request.user
         well_id = self.request.data.get("well")
         well = get_object_or_404(Well, pk=well_id)

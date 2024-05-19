@@ -46,6 +46,9 @@ class Lesson(models.Model):
 
 
 class Subscription(models.Model):
+    """
+    Модель подписки
+    """
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='Пользователь')
     well = models.ForeignKey('Well', on_delete=models.CASCADE, verbose_name='Курс')
     is_active = models.BooleanField(default=False, verbose_name='Активна')
