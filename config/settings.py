@@ -92,12 +92,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Project_DRF',
-        'USER': 'postgres',
-        'HOST': 'localhost',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',
         'PORT': '5432',
-        'PASSWORD': os.getenv('key'),
-
     }
 }
 
@@ -166,11 +165,11 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
+    'redis://redis:6379',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
+    'redis://redis:6379',
     'https://read-and-write.example.com',
 ]
 
